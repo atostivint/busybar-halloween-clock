@@ -1,0 +1,10 @@
+{
+  "format_version": 1,
+  "version": 1,
+  "fields": {
+    "probe": { "type": "integer", "label": "Probe", "default": 7, "min": 0, "max": 100, "step": 1 },
+    "grp": { "type": "group", "label": "Group", "fields": {
+      "inner": { "type": "integer", "label": "Inner", "default": 3, "min": 0, "max": 10, "step": 1 }
+    } }
+  }
+}

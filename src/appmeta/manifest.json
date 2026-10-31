@@ -1,0 +1,9 @@
+{
+  "format_version": 1,
+  "id": "io.github.atostivint.hwclock",
+  "name": "Halloween Clock",
+  "version": "0.1.0",
+  "api_version": "27.12.0",
+  "description": "Orange clock over an animated night graveyard",
+  "author": "atostivint"
+}
