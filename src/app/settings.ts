@@ -5,13 +5,15 @@ export const WEATHERS = ["calm", "stormy", "foggy"] as const;
 export const MOONS = ["full", "half", "crescent", "blood"] as const;
 export type Weather = (typeof WEATHERS)[number];
 export type Moon = (typeof MOONS)[number];
+export const COLORS = ["orange", "red", "purple", "white"] as const;
+export type TimeColor = (typeof COLORS)[number];
 export type NightMode = "off" | "on" | "auto";
 
 export interface Settings {
   weather: Weather | "random";
   moon: Moon | "random";
   rerollMin: number;
-  color: string;
+  color: TimeColor;
   hour12: boolean;
   priority: number;
   batMin: number;
@@ -26,7 +28,7 @@ export interface Settings {
 }
 
 export const DEFAULTS: Settings = {
-  weather: "random", moon: "random", rerollMin: 60, color: "#FF7A00FF", hour12: false, priority: 50,
+  weather: "random", moon: "random", rerollMin: 60, color: "orange", hour12: false, priority: 50,
   batMin: 20, batMax: 60, thunderMin: 30, thunderMax: 120, strikeCharge: true,
   nightMode: "off", nightMaxBrightness: 10, nightFromMin: 23 * 60, nightToMin: 7 * 60,
 };
@@ -55,11 +57,6 @@ function hhmm(v: unknown, def: number): number {
   return m ? Math.min(23, +m[1]) * 60 + Math.min(59, +m[2]) : def;
 }
 
-function colour(v: unknown, def: string): string {
-  const m = /^#?([0-9a-fA-F]{6})([0-9a-fA-F]{2})?$/.exec(String(v));
-  return m ? "#" + (m[1] + (m[2] || "FF")).toUpperCase() : def;
-}
-
 export function parseSettings(values: SettingsValues | null): Settings {
   const v = (values || {}) as Bag;
   const d = DEFAULTS;
@@ -67,7 +64,7 @@ export function parseSettings(values: SettingsValues | null): Settings {
     weather: oneOf(pick(v, "scene", "weather"), ["random", ...WEATHERS] as const, d.weather),
     moon: oneOf(pick(v, "scene", "moon"), ["random", ...MOONS] as const, d.moon),
     rerollMin: int(pick(v, "scene", "reroll_min"), d.rerollMin, 0, 240),
-    color: colour(pick(v, "clock", "time_color"), d.color),
+    color: oneOf(pick(v, "clock", "time_color"), COLORS, d.color),
     hour12: pick(v, "clock", "hour12") === true,
     priority: int(pick(v, "clock", "priority"), d.priority, 1, 100),
     batMin: int(pick(v, "events", "bat_min"), d.batMin, 1, 600),

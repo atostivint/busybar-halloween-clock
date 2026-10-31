@@ -15,7 +15,10 @@
       "reroll_min": { "type": "integer", "label": "New weather and moon every (min, 0 = never)", "default": 60, "min": 0, "max": 240, "step": 10 }
     } },
     "clock": { "type": "group", "label": "Clock", "fields": {
-      "time_color": { "type": "color", "label": "Time colour", "default": "#FF7A00" },
+      "time_color": { "type": "enum", "label": "Time colour", "default": "orange",
+        "options": [
+          { "value": "orange", "label": "Orange" }, { "value": "red", "label": "Red" },
+          { "value": "purple", "label": "Purple" }, { "value": "white", "label": "White" } ] },
       "hour12": { "type": "boolean", "label": "12-hour clock", "default": false },
       "priority": { "type": "integer", "label": "Draw priority", "default": 50, "min": 1, "max": 100, "step": 1 }
     } },

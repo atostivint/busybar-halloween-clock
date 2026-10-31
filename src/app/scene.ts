@@ -38,17 +38,11 @@ export function thunderElement(night: boolean): El {
   };
 }
 
-// Shorthand property on purpose: a literal `font: "..."` breaks busy-cli 0.6 builds on Windows (see docs/FINDINGS.md).
-const font = "extra_large";
-
-export function timeElement(text: string, color: string): El {
-  return { id: "time", type: "text", text, font, color, x: 36, y: 8, align: "center" };
-}
-
 /**
- * The whole scene, bottom to top. A draw replaces what the bar had and an element sent alone ends up
- * behind the others, so layers, time and one-shot events always go out together, events last.
+ * The whole scene, bottom to top: layers, the charged glow (between scenery and time), the time, the charge
+ * fades over the digits, then one-shot events. A draw replaces what the bar had and an element sent alone ends
+ * up behind the others, so everything always goes out together, events last.
  */
-export function sceneElements(world: World, night: boolean, text: string, color: string, events: El[]): El[] {
-  return [...layers(world, night), timeElement(text, color), ...events];
+export function sceneElements(world: World, night: boolean, glow: El[], time: El[], digits: El[], events: El[]): El[] {
+  return [...layers(world, night), ...glow, ...time, ...digits, ...events];
 }

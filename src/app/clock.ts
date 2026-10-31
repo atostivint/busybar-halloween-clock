@@ -2,6 +2,8 @@ import { APP, clearScreen, send } from "./draw";
 import { armHourStrike, collect, newEvents, nextDue, reschedule } from "./events";
 import { isNight } from "./night";
 import { rerolls, roll } from "./roll";
+import { chargeOverlay, hex, presetRgb, type Charge } from "./charge";
+import { layoutTime, timeElements } from "./layout";
 import { batElement, sceneElements, thunderElement, type El, type World } from "./scene";
 import { DEFAULTS, loadSettings, type Settings } from "./settings";
 import { clockText, minuteOfDay, msToNextMinute, syncClock } from "./time";
@@ -37,6 +39,8 @@ export function startClock(): Clock {
   let forceRoll = false;
   let failures = 0;
   let manual: El[] = [];
+  let manualStrike = false;
+  let charge: Charge | null = null; // the clock is charged by lightning and fading back
   let timer: ReturnType<typeof setTimeout> | null = null;
   const events = newEvents();
 
@@ -94,9 +98,18 @@ export function startClock(): Clock {
       if (world !== null && shown !== null) {
         const fired = collect(events, settings, world, night, Date.now());
         const extra = fired.elements.concat(manual);
+        if ((fired.strike || manualStrike) && settings.strikeCharge) charge = { startedAt: Date.now() };
         manual = [];
+        manualStrike = false;
         if (full || extra.length > 0) {
-          await send(sceneElements(world, night, shown, settings.color, extra), settings.priority);
+          const placed = layoutTime(shown);
+          const overlay = charge !== null ? chargeOverlay(charge, placed, settings.color, night, Date.now()) : null;
+          if (overlay === null) charge = null;
+          const color = overlay !== null ? overlay.color : hex(presetRgb(settings.color));
+          await send(
+            sceneElements(world, night, overlay ? overlay.glow : [], timeElements(placed, color), overlay ? overlay.digits : [], extra),
+            settings.priority,
+          );
           full = false;
         }
       }
@@ -104,7 +117,7 @@ export function startClock(): Clock {
     } catch (err) {
       full = true; // the screen state is unknown: resend everything next time
       failures++;
-      console.error(APP + ": " + String(err));
+      if (failures === 1 || failures % 10 === 0) console.error(APP + ": " + String(err) + " (attempt " + failures + ")");
     } finally {
       busy = false;
     }
@@ -132,6 +145,7 @@ export function startClock(): Clock {
     },
     showOff(): void {
       manual = [batElement(night), thunderElement(night)];
+      manualStrike = true;
       arm(0);
     },
   };
