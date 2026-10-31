@@ -4,6 +4,7 @@ An orange clock over an animated night graveyard, running **on the bar itself** 
 
 - **Random weather**: calm (stars), stormy (heavy clouds, thunder) or foggy (haze, ground mist, thunder).
 - **Random moon**: full, half, crescent or blood. Weather and moon are re-rolled every hour by default.
+- **Lightning charges the clock**: on a strike the digits and the glow behind them flicker with the bolts, go electric green, then slowly sweep back to the clock colour (24 s).
 - **Bats** cross the bar in front of the time; **lightning** flashes in stormy and foggy weather, plus a strike at every new hour.
 - **Night mode** for low brightness: a hand-drawn, fully opaque pixel-art set (the firmware renders dim and mixed colours as pale dots at the lowest brightness).
 - All animations are `.anim` files played by the firmware, so the app only talks to the bar once a minute and when an event fires.
@@ -26,7 +27,7 @@ Needs firmware 1.3.1 or newer (API 27.12). Or install from a terminal: `BAR=10.0
 
 ## Settings
 
-Web UI -> Apps -> Halloween Clock. Scene (weather, moon, re-roll interval), Clock (colour, 12-hour, draw priority),
+Web UI -> Apps -> Halloween Clock. Scene (weather, moon, re-roll interval), Clock (colour: orange, red, purple or white; 12-hour; draw priority),
 Events (bat and thunder waits, lightning charge), Night mode (off, on, auto).
 
 **Night auto** uses the bar's fixed brightness: night when it is at or below the limit (default 10 %). The bar exposes no

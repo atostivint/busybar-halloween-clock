@@ -1,8 +1,8 @@
 import manifest from "../appmeta/manifest.json";
 
-// Thin raw-fetch client for the few local endpoints this app may call. busy-lib's client was dropped
-// because on firmware 1.3.1 it threw "TypeError: Expected a function" whenever the bar answered with an
-// error status, which hid the status code.
+// Thin raw-fetch client for the few local endpoints this app may call. busy-lib's client was dropped:
+// on firmware 1.3.1 it reported error statuses (e.g. DELETE -> 400) as "TypeError: Expected a function",
+// which hid the status code this app needs to react to (409 low priority, 408/508 busy).
 const BASE = "http://" + __BUSY_ADDR__ + "/api";
 export const APP = manifest.id;
 
@@ -12,7 +12,6 @@ export interface ApiError extends Error {
 }
 
 function fail(kind: ApiError["kind"], status: number, message: string): ApiError {
-  // Property assignment, not Object.assign: the runtime throws "Expected a function" for the latter.
   const err = new Error(message) as ApiError;
   err.kind = kind;
   err.status = status;
