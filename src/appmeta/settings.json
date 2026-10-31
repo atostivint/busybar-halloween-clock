@@ -2,9 +2,38 @@
   "format_version": 1,
   "version": 1,
   "fields": {
-    "probe": { "type": "integer", "label": "Probe", "default": 7, "min": 0, "max": 100, "step": 1 },
-    "grp": { "type": "group", "label": "Group", "fields": {
-      "inner": { "type": "integer", "label": "Inner", "default": 3, "min": 0, "max": 10, "step": 1 }
+    "scene": { "type": "group", "label": "Scene", "fields": {
+      "weather": { "type": "enum", "label": "Weather", "default": "random",
+        "options": [
+          { "value": "random", "label": "Random" }, { "value": "calm", "label": "Calm" },
+          { "value": "stormy", "label": "Stormy" }, { "value": "foggy", "label": "Foggy" } ] },
+      "moon": { "type": "enum", "label": "Moon", "default": "random",
+        "options": [
+          { "value": "random", "label": "Random" }, { "value": "full", "label": "Full" },
+          { "value": "half", "label": "Half" }, { "value": "crescent", "label": "Crescent" },
+          { "value": "blood", "label": "Blood" } ] },
+      "reroll_min": { "type": "integer", "label": "New weather and moon every (min, 0 = never)", "default": 60, "min": 0, "max": 240, "step": 10 }
+    } },
+    "clock": { "type": "group", "label": "Clock", "fields": {
+      "time_color": { "type": "color", "label": "Time colour", "default": "#FF7A00" },
+      "hour12": { "type": "boolean", "label": "12-hour clock", "default": false },
+      "priority": { "type": "integer", "label": "Draw priority", "default": 50, "min": 1, "max": 100, "step": 1 }
+    } },
+    "events": { "type": "group", "label": "Events", "fields": {
+      "bat_min": { "type": "integer", "label": "Bat: shortest wait (s)", "default": 20, "min": 1, "max": 600, "step": 1 },
+      "bat_max": { "type": "integer", "label": "Bat: longest wait (s, 0 = no bats)", "default": 60, "min": 0, "max": 600, "step": 1 },
+      "thunder_min": { "type": "integer", "label": "Thunder: shortest wait (s)", "default": 30, "min": 1, "max": 900, "step": 1 },
+      "thunder_max": { "type": "integer", "label": "Thunder: longest wait (s, 0 = none)", "default": 120, "min": 0, "max": 900, "step": 1 },
+      "strike_charge": { "type": "boolean", "label": "Lightning charges the clock", "default": true }
+    } },
+    "night": { "type": "group", "label": "Night mode", "fields": {
+      "mode": { "type": "enum", "label": "Night mode", "default": "off",
+        "options": [
+          { "value": "off", "label": "Off" }, { "value": "on", "label": "On" },
+          { "value": "auto", "label": "Auto (brightness, else schedule)" } ] },
+      "max_brightness": { "type": "integer", "label": "Auto: night at or below this brightness (%)", "default": 10, "min": 1, "max": 100, "step": 1 },
+      "from": { "type": "time", "label": "Auto: schedule start (when brightness is auto)", "default": "23:00" },
+      "to": { "type": "time", "label": "Auto: schedule end", "default": "07:00" }
     } }
   }
 }

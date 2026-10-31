@@ -14,7 +14,7 @@ for i in range(N):
         for x in range(W):
             px += bytes((0, 255, 0, 255)) if (x < cols and 6 <= y <= 9) else bytes(4)   # BGRA green
     frames.append(bytes(px))
-base = Path(__file__).resolve().parent.parent.parent / "src" / "animations"
+base = Path(__file__).resolve().parent / "out"; base.mkdir(exist_ok=True)
 variants = {
     "sec_plain": None,
     "sec_disjoint": [(f"t{k}", k * 10, k * 10 + 9) for k in range(4)],

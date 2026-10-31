@@ -6,6 +6,9 @@ BAR="${BAR:-10.0.4.20}"
 ID="io.github.atostivint.hwclock"
 TGZ="${1:-dist/$ID.tgz}"
 AUTH=(); [ -n "${BUSY_TOKEN:-}" ] && AUTH=(-H "X-API-Token: $BUSY_TOKEN")
+# A running app cannot be replaced ("Cannot delete app" in the device log), so quit it first.
+curl -s "${AUTH[@]}" -X POST "http://$BAR/api/apps/quit" >/dev/null || true
+sleep 1
 KEY=$(curl -sf "${AUTH[@]}" -X POST "http://$BAR/api/apps/stage" --data-binary @"$TGZ" | python -c 'import sys,json;print(json.load(sys.stdin)["install_key"])')
 curl -sf "${AUTH[@]}" -X POST "http://$BAR/api/apps/install?install_key=$KEY" && echo
 curl -sf "${AUTH[@]}" -X POST "http://$BAR/api/apps/launch?app_id=$ID" && echo
